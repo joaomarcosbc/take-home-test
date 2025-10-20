@@ -9,4 +9,18 @@
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.36">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fundo.Applications.Application\Fundo.Applications.Application.csproj" />
+    <ProjectReference Include="..\Fundo.Applications.Infrastructure\Fundo.Applications.Infrastructure.csproj" />
+    <ProjectReference Include="..\Fundo.Applications.Packages\Fundo.Applications.Packages.csproj" />
+  </ItemGroup>
+
 </Project>

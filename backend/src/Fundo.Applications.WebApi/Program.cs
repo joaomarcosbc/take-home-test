@@ -1,31 +1,44 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+﻿using Fundo.Applications.Application;
+using Fundo.Applications.Infrastructure;
+using Fundo.Applications.Packages;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 
-namespace Fundo.Applications.WebApi
-{
-    public static class Program
-    {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                CreateWebHostBuilder(args).Build().Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled WebApi exception: {ex.Message}");
-            }
-            finally
-            {
-                Console.WriteLine("Application shutting down.");
-            }
-        }
+var builder = WebApplication.CreateBuilder(args);
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
-        {
-            return WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
-        }
-    }
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddPackagesServices();
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseRouting();
+app.UseAuthorization();
+
+app.MapControllers();
+
+try
+{
+    app.Run();
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Unhandled WebApi exception: {ex.Message}");
+}
+finally
+{
+    Console.WriteLine("Application shutting down.");
 }
