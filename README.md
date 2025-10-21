@@ -61,7 +61,6 @@ FundoLoanApp/
 
 - **Database**:  
   - EF Core with **In-Memory Database** for tests.
-  - Can be migrated to a real database easily.
 
 - **Authentication**: Not implemented for simplicity. Adding `[Authorize]` in ASP.NET Core would be trivial.
 
@@ -87,7 +86,6 @@ FundoLoanApp/
 - Add authentication and authorization flows.
 - Enhance frontend with detailed loan and payment views.
 - Improve integration test coverage.
-- Use real databases and migrations for production.
 
 ---
 
