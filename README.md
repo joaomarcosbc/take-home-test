@@ -1,83 +1,105 @@
-# **Take-Home Test: Backend-Focused Full-Stack Developer (.NET C# & Angular)**
+# Fundo Loan Management Application
 
-## **Objective**
-
-This take-home test evaluates your ability to develop and integrate a .NET Core (C#) backend with an Angular frontend, focusing on API design, database integration, and basic DevOps practices.
-
-## **Instructions**
-
-1.  **Fork the provided repository** before starting the implementation.
-2.  Implement the requested features in your forked repository.
-3.  Once you have completed the implementation, **send the link** to your forked repository via email for review.
-
-## **Task**
-
-You will build a simple **Loan Management System** with a **.NET Core backend (C#)** exposing RESTful APIs and a **basic Angular frontend** consuming these APIs.
+This is a simple loan management system built with **.NET 6** and **Angular**, designed to demonstrate a clean architecture approach and several modern backend patterns. The goal of this project was to implement core features with clean, maintainable code, leaving room for future improvements.
 
 ---
 
-## **Requirements**
+## Architecture Overview
 
-### **1. Backend (API) - .NET Core**
-
-* Create a **RESTful API** in .NET Core to handle **loan applications**.
-* Implement the following endpoints:
-    * `POST /loans` → Create a new loan.
-    * `GET /loans/{id}` → Retrieve loan details.
-    * `GET /loans` → List all loans.
-    * `POST /loans/{id}/payment` → Deduct from `currentBalance`.
-* Loan example (feel free to improve it):
-
-    ```json
-    {
-        "amount": 1500.00, // Amount requested
-        "currentBalance": 500.00, // Remaining balance
-        "applicantName": "Maria Silva", // User name
-        "status": "active" // Status can be active or paid
-    }
-    ```
-
-* Use **Entity Framework Core** with **SQL Server**.
-* Create seed data to populate the loans (the frontend will consume this).
-* Write **unit/integration tests for the API** (xUnit or NUnit).
-* **Dockerize** the backend and create a **Docker Compose** file.
-* Create a README with setup instructions.
-
-### **2. Frontend - Angular (Simplified UI)**  
-
-Develop a **lightweight Angular app** to interact with the backend
-
-#### **Features:**  
-- A **table** to display a list of existing loans.  
-
-#### **Mockup:**  
-[View Mockup](https://kzmgtjqt0vx63yji8h9l.lite.vusercontent.net/)  
-(*The design doesn’t need to be an exact replica of the mockup—it serves as a reference. Aim to keep it as close as possible.*)  
+Below is a simplified diagram of the project's **Clean Architecture**:
+```
+FundoLoanApp/
+├── WebApi/                  # Controllers, Routing, HTTP
+│   └── LoanManagementController.cs
+│
+├── Application/             # Use Cases, MediatR Handlers, Pipeline Behaviors
+│   ├── Handlers/
+│   │   ├── CreateLoanHandler.cs
+│   │   ├── GetLoanHandler.cs
+│   │   ├── CreatePaymentHandler.cs
+│   │   └── GetAllLoansHandler.cs
+│   └── Behaviors/
+│       ├── ExceptionHandlingBehavior.cs
+│       ├── LoggingBehavior.cs
+│       └── ValidationBehavior.cs
+│
+├── Domain/                  # Entities, Enums, Result Pattern
+│   ├── Entities/
+│   │   ├── Loan.cs
+│   │   └── LoanPayment.cs
+│
+└── Infrastructure/          # Repositories, Database
+    ├── Repositories/
+    │   └── LoanRepository.cs
+    └── DbContext/
+        └── FundoDbContext.cs
+```
 
 ---
 
-## **Bonus (Optional, Not Required)**
+## Technical Choices
 
-* **Improve error handling and logging** with structured logs.
-* Implement **authentication**.
-* Create a **GitHub Actions** pipeline for building and testing the backend.
+### Backend
+
+- **Clean Architecture**: Separates **Application**, **Domain**, **Infrastructure**, and **WebApi** layers for maintainability and testability.
+  
+- **MediatR**: Commands and queries are handled via MediatR to decouple controllers from business logic.
+
+- **Documentation Comments**: XML comments describe parameters, return types, and HTTP responses.
+
+- **Pipeline Behaviors (MediatR)**: Centralized handling for:
+  - Exception catching and consistent response conversion.
+  - Logging of requests and responses.
+  - Validation (via FluentValidation or custom validators) applied automatically per request.
+
+- **Result Pattern**:  
+  - Returns expected errors (e.g., “Loan not found”) as `Result<T>`.
+  - Reserves exceptions for unexpected errors only.
+  - [Why results instead of exceptions?](https://enterprisecraftsmanship.com/posts/exceptions-for-flow-control/)
+
+- **Result Serializer**: Converts `Result` objects into consistent HTTP responses.
+
+- **Database**:  
+  - EF Core with **In-Memory Database** for tests.
+  - Can be migrated to a real database easily.
+
+- **Authentication**: Not implemented for simplicity. Adding `[Authorize]` in ASP.NET Core would be trivial.
 
 ---
 
-## **Evaluation Criteria**
+### Frontend
 
-✔ **Code quality** (clean architecture, modularization, best practices).
-
-✔ **Functionality** (the API and frontend should work as expected).
-
-✔ **Security considerations** (authentication, validation, secure API handling).
-
-✔ **Testing coverage** (unit tests for critical backend functions).
-
-✔ **Basic DevOps implementation** (Docker for backend).
+- **Simplicity first**: Built according to requirements.
+- **Pagination support**: Added to loan list as per backend contract.
+- **Potential improvements**: A detailed loan view (with payment history and dates) could be added since backend provides this data.
 
 ---
 
-## **Additional Information**
+## Testing
 
-Candidates are encouraged to include a `README.md` file in their repository detailing their implementation approach, any challenges they faced, features they couldn't complete, and any improvements they would make given more time. Ideally, the implementation should be completed within **two days** of starting the test.
+- **Unit tests**: Covers core business logic.
+- **Integration tests**: Uses EF Core In-Memory DB and mocked MediatR. Could be improved with more scenarios if more time were available.
+
+---
+
+## Future Improvements
+
+- Add authentication and authorization flows.
+- Enhance frontend with detailed loan and payment views.
+- Improve integration test coverage.
+- Use real databases and migrations for production.
+
+---
+
+## How to Run
+
+1. **Backend**:  
+   - Requires docker and docker-compose.  
+   - Run:  
+     ```bash
+     dotnet-compose up
+     ```
+
+---
+
+This project focuses on **clean architecture, maintainable patterns, and predictable business logic**, providing a strong foundation for future expansion.
