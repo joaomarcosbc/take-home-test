@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: "fundoQWR123!"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+      - ./db/init.sql:/init.sql:ro
+    command: >
+      /bin/bash -c "/opt/mssql/bin/sqlservr & 
+      echo 'Waiting for SQL Server...' &&
+      sleep 15 &&
+      echo 'Running init.sql...' &&
+      /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P fundoQWR123! -i /init.sql -C &&
+      wait"
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: loans-api
+    depends_on:
+      - sqlserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "65166:80"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: loans-frontend
+    depends_on:
+      - backend
+    ports:
+      - "4200:4200"
+
+volumes:
+  sql_data:
