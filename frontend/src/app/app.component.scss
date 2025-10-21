@@ -9,6 +9,11 @@
   &--container {
     width: 60%;
   }
+  &--paginator {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }  
 }
 
 .mdc-data-table {
