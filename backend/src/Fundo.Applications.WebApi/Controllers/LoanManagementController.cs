@@ -1,4 +1,5 @@
-﻿using Fundo.Applications.Application.UseCases.Loans.CreateLoan;
+﻿using Fundo.Applications.Application.Common;
+using Fundo.Applications.Application.UseCases.Loans.CreateLoan;
 using Fundo.Applications.Application.UseCases.Loans.CreateLoanPayment;
 using Fundo.Applications.Application.UseCases.Loans.GetAllLoans;
 using Fundo.Applications.Application.UseCases.Loans.GetLoan;
@@ -36,7 +37,7 @@ public class LoanManagementController : ControllerBase
     /// <b>404:</b> No records found.
     /// </returns>
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<GetAllLoansResponse>), 200)]
+    [ProducesResponseType(typeof(PagedResult<GetAllLoansResponse>), 200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
     public async Task<IActionResult> Get([FromQuery] GetAllLoansRequest request)

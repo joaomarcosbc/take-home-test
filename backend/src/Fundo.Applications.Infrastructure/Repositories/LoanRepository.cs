@@ -1,4 +1,5 @@
-﻿using Fundo.Applications.Application.Repositories;
+﻿using Fundo.Applications.Application.Common;
+using Fundo.Applications.Application.Repositories;
 using Fundo.Applications.Domain.Entities;
 using Fundo.Applications.Infrastructure.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
@@ -18,17 +19,26 @@ public class LoanRepository : ILoanRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IReadOnlyList<Loan>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+    public async Task<PagedResult<Loan>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
     {
-        if (pageNumber < 1) pageNumber = 1;
-        if (pageSize < 1) pageSize = 10;
+    if (pageNumber < 1) pageNumber = 1;
+    if (pageSize < 1) pageSize = 10;
 
-        return await _context.Loans
-            .AsNoTracking()
-            .OrderBy(l => l.Id)
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+    var query = _context.Loans.AsNoTracking().OrderBy(l => l.Id);
+
+    var totalCount = await query.CountAsync();
+
+    var items = await query
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+
+    return new PagedResult<Loan>(
+        Items: items,
+        TotalCount: totalCount,
+        PageNumber: pageNumber,
+        PageSize: pageSize
+    );
     }
 
     public async Task<Loan?> GetByIdAsync(int id)

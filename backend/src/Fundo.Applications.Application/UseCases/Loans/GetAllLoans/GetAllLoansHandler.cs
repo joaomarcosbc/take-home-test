@@ -3,6 +3,7 @@ using Fundo.Applications.Application.Repositories;
 using Fundo.Applications.Packages.ResultsSerialization.Errors;
 using Fundo.Applications.Application.MappingProfiles;
 using MediatR;
+using Fundo.Applications.Application.Common;
 
 namespace Fundo.Applications.Application.UseCases.Loans.GetAllLoans;
 
@@ -12,24 +13,29 @@ namespace Fundo.Applications.Application.UseCases.Loans.GetAllLoans;
 /// <param name="request">Pagination parameters in <see cref="GetAllLoansRequest"/>.</param>
 /// <param name="cancellationToken">Cancellation token.</param>
 /// <returns><see cref="Result{T}"/> containing the loan list or 404 if none found.</returns>
-internal sealed class GetAllLoansHandler : IRequestHandler<GetAllLoansRequest, Result<List<GetAllLoansResponse>>>
+internal sealed class GetAllLoansHandler : IRequestHandler<GetAllLoansRequest, Result<PagedResult<GetAllLoansResponse>>>
 {
     private readonly ILoanRepository _loanRepository;
     public GetAllLoansHandler(ILoanRepository loanRepository)
     {
         _loanRepository = loanRepository;
     }
-    public async Task<Result<List<GetAllLoansResponse>>> Handle(GetAllLoansRequest request, CancellationToken cancellationToken)
+    public async Task<Result<PagedResult<GetAllLoansResponse>>> Handle(GetAllLoansRequest request, CancellationToken cancellationToken)
     {
-        var loans = await _loanRepository.GetAllAsync(
-            request.PageNumber,
-            request.PageSize);
+    var pagedLoans = await _loanRepository.GetAllAsync(
+        request.PageNumber,
+        request.PageSize);
 
-        if (!loans.Any())
-            return new NotFoundError($"No loans found on page {request.PageNumber}.");
+    if (pagedLoans.Items.Count <= 0)
+        return new NotFoundError($"No loans found on page {request.PageNumber}.");
 
-        return loans
-            .ToGetAllLoansResponse()
-            .ToList();
+    var result = new PagedResult<GetAllLoansResponse>(
+        Items: pagedLoans.Items.Select(l => l.ToGetAllLoansResponse()).ToList(),
+        TotalCount: pagedLoans.TotalCount,
+        PageNumber: pagedLoans.PageNumber,
+        PageSize: pagedLoans.PageSize
+    );
+
+    return Result.Ok(result);
     }
 }

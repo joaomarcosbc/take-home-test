@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using Fundo.Applications.Application.Common;
 using MediatR;
 
 namespace Fundo.Applications.Application.UseCases.Loans.GetAllLoans;
@@ -15,4 +16,4 @@ public record class GetAllLoansRequest(
     /// The number of items per page (default is 10).
     /// </summary>
     int PageSize = 10
-) : IRequest<Result<List<GetAllLoansResponse>>>;
+) : IRequest<Result<PagedResult<GetAllLoansResponse>>>;

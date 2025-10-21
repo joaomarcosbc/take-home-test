@@ -1,4 +1,5 @@
-﻿using Fundo.Applications.Domain.Entities;
+﻿using Fundo.Applications.Application.Common;
+using Fundo.Applications.Domain.Entities;
 
 namespace Fundo.Applications.Application.Repositories;
 
@@ -27,7 +28,7 @@ public interface ILoanRepository
     /// <param name="pageNumber">The page number (default is 1).</param>
     /// <param name="pageSize">The number of items per page (default is 10).</param>
     /// <returns>A task that returns a read-only list of <see cref="Loan"/> entities.</returns>
-    Task<IReadOnlyList<Loan>> GetAllAsync(int pageNumber = 1, int pageSize = 10);
+    Task<PagedResult<Loan>> GetAllAsync(int pageNumber = 1, int pageSize = 10);
 
     /// <summary>
     /// Retrieves a loan by its ID.
