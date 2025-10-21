@@ -93,13 +93,14 @@ FundoLoanApp/
 
 ## How to Run
 
-1. **Backend**:  
+1. **Docker/Docker Compose**:  
    - Requires docker and docker-compose.  
    - Run:  
      ```bash
      dotnet-compose up
      ```
-
+   - Access [swagger](http://localhost:65166/swagger/index.html) for the API documentation (endpoints, request, responses)
+   - Acess the [frontend](http://localhost:4200)
 ---
 
 This project focuses on **clean architecture, maintainable patterns, and predictable business logic**, providing a strong foundation for future expansion.
