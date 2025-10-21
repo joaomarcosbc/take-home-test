@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Loan } from '../models/loan.model';
-import { PaginatedResponse } from '../models/paginates-response.model';
+import { PaginatedResponse } from '../models/paginated-response.model';
 
 @Injectable({
   providedIn: 'root',

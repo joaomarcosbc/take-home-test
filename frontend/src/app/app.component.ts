@@ -9,7 +9,7 @@ import {
 } from '@angular/material/paginator';
 import { LoanService } from './services/loan.service';
 import { Loan } from './models/loan.model';
-import { PaginatedResponse } from './models/paginates-response.model';
+import { PaginatedResponse } from './models/paginated-response.model';
 
 @Component({
   selector: 'app-root',
