@@ -20,6 +20,18 @@ public class ExceptionHandlingBehavior<TRequest, TResponse>
         catch (Exception ex)
         {
             var error = new InternalServerError(ex.Message, ex);
+
+            if (typeof(TResponse).IsGenericType &&
+                typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<>))
+            {
+                var tResultType = typeof(TResponse).GetGenericArguments()[0];
+                var failMethod = typeof(Result)
+                    .GetMethods()
+                    .First(m => m.Name == nameof(Result.Fail) && m.IsGenericMethod)
+                    .MakeGenericMethod(tResultType);
+
+                return (TResponse)failMethod.Invoke(null, new object[] { error })!;
+            }
             return (TResponse)(object)Result.Fail(error);
         }
     }
