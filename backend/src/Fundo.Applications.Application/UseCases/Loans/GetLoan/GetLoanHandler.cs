@@ -14,7 +14,7 @@ namespace Fundo.Applications.Application.UseCases.Loans.GetLoan;
 /// <returns>
 /// <see cref="Result{GetLoanResponse}"/> with the loan details or 404 if not found.
 /// </returns>
-internal sealed class GetLoanHandler : IRequestHandler<GetLoanRequest, Result<GetLoanResponse>>
+public sealed class GetLoanHandler : IRequestHandler<GetLoanRequest, Result<GetLoanResponse>>
 {
     private readonly ILoanRepository _loanRepository;
 

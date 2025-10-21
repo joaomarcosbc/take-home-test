@@ -13,7 +13,7 @@ namespace Fundo.Applications.Application.UseCases.Loans.GetAllLoans;
 /// <param name="request">Pagination parameters in <see cref="GetAllLoansRequest"/>.</param>
 /// <param name="cancellationToken">Cancellation token.</param>
 /// <returns><see cref="Result{T}"/> containing the loan list or 404 if none found.</returns>
-internal sealed class GetAllLoansHandler : IRequestHandler<GetAllLoansRequest, Result<PagedResult<GetAllLoansResponse>>>
+public sealed class GetAllLoansHandler : IRequestHandler<GetAllLoansRequest, Result<PagedResult<GetAllLoansResponse>>>
 {
     private readonly ILoanRepository _loanRepository;
     public GetAllLoansHandler(ILoanRepository loanRepository)

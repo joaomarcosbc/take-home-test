@@ -12,7 +12,7 @@ namespace Fundo.Applications.Application.UseCases.Loans.CreateLoan;
 /// <param name="request">Loan data in <see cref="CreateLoanRequest"/>.</param>
 /// <param name="cancellationToken">Cancellation token.</param>
 /// <returns><see cref="Result"/> indicating success or failure.</returns>
-internal sealed class CreateLoanHandler : IRequestHandler<CreateLoanRequest, Result>
+public sealed class CreateLoanHandler : IRequestHandler<CreateLoanRequest, Result>
 {
     private readonly ILoanRepository _loanRepository;
     public CreateLoanHandler(ILoanRepository loanRepository)

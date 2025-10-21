@@ -16,7 +16,7 @@ namespace Fundo.Applications.Application.UseCases.Loans.CreateLoanPayment;
 /// <see cref="Result"/>:
 /// 204 on success, 400 if amount is invalid, 404 if loan not found.
 /// </returns>
-internal sealed class CreateLoanPaymentHandler : IRequestHandler<CreateLoanPaymentRequest, Result>
+public sealed class CreateLoanPaymentHandler : IRequestHandler<CreateLoanPaymentRequest, Result>
 {
     private readonly ILoanRepository _loanRepository;
     private readonly ILoanPaymentRepository _loanPaymentRepository;
